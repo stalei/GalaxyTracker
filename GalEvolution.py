@@ -52,6 +52,7 @@ if __name__ == "__main__":
     z=[0.0]*L
     mv=[0.0]*L
     c=0
+    id=0
     for i in range(args.Si,args.Sf):
         #snap[i]=i
         print(i)
@@ -67,34 +68,53 @@ if __name__ == "__main__":
         HIndex=HIndex0[GS0 == i]
         CentralG=CentralG0[GS0 == i]
         # now I have all galaxies for this snapshot
-        id=0
+        #id=0 # This ID tracking is not accurate, it jumps back and forth between galaxies.
+        if(i !=args.Si):
+            dx=Gx-x_pre
+            dy=Gy-y_pre
+            dz=Gz-z_pre
+            r=np.sqrt(dx*dx+dy*dy+dz*dz)
+            index=np.argmin(r)
+            id=GIndex[index]
         x[c]=Gx[GIndex ==id]
         y[c]=Gy[GIndex ==id]
         z[c]=Gz[GIndex ==id]
         MStar[c]=GSM[GIndex ==id]
+        mv[c]=GMv[GIndex ==id]
         snap[c]=i#GS[GIndex ==id]
+        x_pre=x[c]
+        y_pre=y[c]
+        z_pre=z[c]
+        M_pre=MStar[c]
+        mv_pre=mv[c]
         c+=1
     #now let's plot!
     print(np.array(MStar))
     fig = plt.figure(0)
     ax1 = fig.add_subplot(221)#, projection='3d')
     ax1.plot(snap,MStar,'k.', markersize=1)
+    #ax1.plot(snap,mv,'r.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax1.set_xlabel('Snapsot')
+    ax1.set_xlabel('Snapshot')
     ax1.set_ylabel('Stellar Mass')
     ax2 = fig.add_subplot(222)#, projection='3d')
     ax2.plot(snap,x,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax2.set_xlabel('Snapsot')
+    ax2.set_xlabel('Snapshot')
     ax2.set_ylabel('X')
     ax3 = fig.add_subplot(223)#, projection='3d')
     ax3.plot(snap,y,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax3.set_xlabel('Snapsot')
+    ax3.set_xlabel('Snapshot')
     ax3.set_ylabel('Y')
     ax4 = fig.add_subplot(224)#, projection='3d')
     ax4.plot(snap,z,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax4.set_xlabel('Snapsot')
+    ax4.set_xlabel('Snapshot')
     ax4.set_ylabel('Z')
+    fig2=plt.figure(1)
+    ax20=fig2.add_subplot(111)
+    ax20.plot(snap,mv,'k.', markersize=1)
+    ax20.set_xlabel('Snapshot')
+    ax20.set_ylabel('Virial Mass')
     plt.show()
