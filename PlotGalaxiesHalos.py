@@ -15,13 +15,16 @@ from matplotlib import cm
 import argparse
 import math
 #import csv
-#How to use: $python GalEvolution.py galaxy_file start_snap end_snap
-#example: python GalEvolution.py  AllGals.ascii 40 264
+#How to use: $python PlotGalaxiesHalos.py galaxy_file halo_file start_snap end_snap
+#example: python PlotGalaxiesHalos.py  AllGals.ascii 40 264
+#############Later:
+#example: python GalEvolution.py  AllGals.ascii /media/shahram/SD/Sample100Mpc/838/halos_c3z838.ascii 40 264
 #This works for a single halo/galaxy
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("GalFile", type=str)
+    #parser.add_argument("Halos", type=str)
     parser.add_argument("Si", type=int)
     parser.add_argument("Sf", type=int)
     args = parser.parse_args()
@@ -31,6 +34,7 @@ if __name__ == "__main__":
     NBins=6
     # Galaxies from Sage, read raw data
     # 51.1813,49.1431,49.1961,2.87634e+08,0.000723028,36,0,0,0,0
+    #read all galaxies from extracted file (not sage)
     Gals=np.genfromtxt(args.GalFile, delimiter = ',')
     Gx0=np.array(Gals[:,0])
     Gy0=np.array(Gals[:,1])
@@ -62,59 +66,46 @@ if __name__ == "__main__":
         GMv=GMv0[GS0 == i]
         GRv=GRv0[GS0 == i]
         GSM=GSM0[GS0 == i]
-        print(GSM)
         GS=GS0[GS0 == i]
         GIndex=GIndex0[GS0 == i]
         HIndex=HIndex0[GS0 == i]
         CentralG=CentralG0[GS0 == i]
+        fig0=plt.figure(0)
+        ax0 = fig0.add_subplot(111, projection='3d')
+        ax0.scatter(Gx,Gy,Gz,c='black',alpha=0.8,marker='.',s=1)
+        #
+        ax0.set_xlabel('X (Mpc)')
+        ax0.set_ylabel('Y (Mpc)')
+        ax0.set_zlabel('Z (Mpc)')
         # now I have all galaxies for this snapshot
         #id=0 # This ID tracking is not accurate, it jumps back and forth between galaxies.
-        if(i !=args.Si):
-            dx=Gx-x_pre
-            dy=Gy-y_pre
-            dz=Gz-z_pre
-            r=np.sqrt(dx*dx+dy*dy+dz*dz)
-            index=np.argmin(r)
-            id=GIndex[index]
-        x[c]=Gx[GIndex ==id]
-        y[c]=Gy[GIndex ==id]
-        z[c]=Gz[GIndex ==id]
-        MStar[c]=GSM[GIndex ==id]
-        mv[c]=GMv[GIndex ==id]
-        snap[c]=i#GS[GIndex ==id]
-        x_pre=x[c]
-        y_pre=y[c]
-        z_pre=z[c]
-        M_pre=MStar[c]
-        mv_pre=mv[c]
-        c+=1
     #now let's plot!
-    print(np.array(MStar))
-    fig = plt.figure(0)
-    ax1 = fig.add_subplot(221)#, projection='3d')
-    ax1.plot(snap,MStar,'k.', markersize=1)
+    #print(np.array(MStar))
+    #fig = plt.figure(0)
+    #ax1 = fig.add_subplot(221)#, projection='3d')
+    #ax1.plot(snap,MStar,'k.', markersize=1)
     #ax1.plot(snap,mv,'r.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax1.set_xlabel('Snapshot')
-    ax1.set_ylabel('Stellar Mass')
-    ax2 = fig.add_subplot(222)#, projection='3d')
-    ax2.plot(snap,x,'k.', markersize=1)
+    #ax1.set_xlabel('Snapshot')
+    #ax1.set_ylabel('Stellar Mass')
+    #ax2 = fig.add_subplot(222)#, projection='3d')
+    #ax2.plot(snap,x,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax2.set_xlabel('Snapshot')
-    ax2.set_ylabel('X')
-    ax3 = fig.add_subplot(223)#, projection='3d')
-    ax3.plot(snap,y,'k.', markersize=1)
+    #ax2.set_xlabel('Snapshot')
+    #ax2.set_ylabel('X')
+    #ax3 = fig.add_subplot(223)#, projection='3d')
+    #ax3.plot(snap,y,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax3.set_xlabel('Snapshot')
-    ax3.set_ylabel('Y')
-    ax4 = fig.add_subplot(224)#, projection='3d')
-    ax4.plot(snap,z,'k.', markersize=1)
+    #ax3.set_xlabel('Snapshot')
+    #ax3.set_ylabel('Y')
+    #ax4 = fig.add_subplot(224)#, projection='3d')
+    #ax4.plot(snap,z,'k.', markersize=1)
     #fig.set_size_inches(14,8)
-    ax4.set_xlabel('Snapshot')
-    ax4.set_ylabel('Z')
-    fig2=plt.figure(1)
-    ax20=fig2.add_subplot(111)
-    ax20.plot(snap,mv,'k.', markersize=1)
-    ax20.set_xlabel('Snapshot')
-    ax20.set_ylabel('Virial Mass')
+    #ax4.set_xlabel('Snapshot')
+    #ax4.set_ylabel('Z')
+    #fig2=plt.figure(1)
+    #ax20=fig2.add_subplot(111)
+    #ax20.plot(snap,mv,'k.', markersize=1)
+    #ax20.set_xlabel('Snapshot')
+    #ax20.set_ylabel('Virial Mass')
     plt.show()
