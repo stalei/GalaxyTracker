@@ -7,7 +7,13 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // This code is distributed as is and there is no warranty or technical support
 // Reading stored data in a sage file
-//
+// How to run:
+//first run:
+//$make
+//Then you can run"
+// $./ExportForTracking > AllGals838.ascii
+// If you have an error you may need to give permission
+// $ chmod +x ExportForTracking
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -254,8 +260,9 @@ void ExportGalaxy(int snap,struct SageGalaxies *Output, int id)
 
 int main()
 {
-sprintf(SageDir,"/home/shahram/Desktop/Research/3_Tagging/ReadSage/sage_out");
-int i,s, LastSnap=264,FirstSnap=36;
+//sprintf(SageDir,"/home/shahram/Desktop/Research/3_Tagging/ReadSage/sage_out");
+sprintf(SageDir,"/media/shahram/SD/Sample100Mpc/838/sage_out"); //49-264
+int i,s, LastSnap=264,FirstSnap=49;
 
 for(s=FirstSnap;s<LastSnap;s++)
 {

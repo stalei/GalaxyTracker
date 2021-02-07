@@ -70,14 +70,45 @@ if __name__ == "__main__":
         GIndex=GIndex0[GS0 == i]
         HIndex=HIndex0[GS0 == i]
         CentralG=CentralG0[GS0 == i]
-        fig0=plt.figure(0)
-        ax0 = fig0.add_subplot(111, projection='3d')
+        fig0=plt.figure(0,figsize=plt.figaspect(1./2.))
+        fig0.suptitle('snapshot='+str(i))
+        ax0 = fig0.add_subplot(121, projection='3d')
         ax0.scatter(Gx,Gy,Gz,c='black',alpha=0.8,marker='.',s=1)
         #
         ax0.set_xlabel('X (Mpc)')
         ax0.set_ylabel('Y (Mpc)')
         ax0.set_zlabel('Z (Mpc)')
         # now I have all galaxies for this snapshot
+        #find a target galaxy
+        if(i !=args.Si):
+            dx=Gx-x_pre
+            dy=Gy-y_pre
+            dz=Gz-z_pre
+            r=np.sqrt(dx*dx+dy*dy+dz*dz)
+            index=np.argmin(r)
+            id=GIndex[index]
+        x[c]=Gx[GIndex ==id]
+        y[c]=Gy[GIndex ==id]
+        z[c]=Gz[GIndex ==id]
+        MStar[c]=GSM[GIndex ==id]
+        mv[c]=GMv[GIndex ==id]
+        snap[c]=i#GS[GIndex ==id]
+        x_pre=x[c]
+        y_pre=y[c]
+        z_pre=z[c]
+        M_pre=MStar[c]
+        mv_pre=mv[c]
+        ax0.scatter(x[c],y[c],z[c],c='red',alpha=0.8,marker='+',s=10)
+        #zoom in plot
+        ax1 = fig0.add_subplot(122, projection='3d')
+        ax1.scatter(Gx,Gy,Gz,c='black',alpha=0.8,marker='.',s=10)
+        l=0.2
+        ax1.set_xlim([x[c]-l, x[c]+l])
+        ax1.set_ylim([y[c]-l, y[c]+l])
+        ax1.set_zlim([z[c]-l, z[c]+l])
+        ax1.scatter(x[c],y[c],z[c],c='red',alpha=0.8,marker='o',s=20)
+        plt.savefig(str(i)+'.png')
+        c+=1
         #id=0 # This ID tracking is not accurate, it jumps back and forth between galaxies.
     #now let's plot!
     #print(np.array(MStar))
